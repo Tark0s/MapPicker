@@ -12,7 +12,7 @@ class HomepageController extends AbstractController
 
         $randInt = random_int(1, 100);
 
-        return $this->render('homepage/index.html.twig', [
+        return $this->render('Homepage/index.html.twig', [
             'number' => $randInt
         ]);
     }
