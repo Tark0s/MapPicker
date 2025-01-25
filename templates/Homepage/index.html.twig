@@ -2,5 +2,53 @@
 
 
 {% block body %}
-    <div class="number">{{ map }} : {{ number }}</div>
+    <div class="dashboard">
+        <h1>Co dziś pykamy wariacie?</h1>
+
+        <button id="pickMapBtn">Pick map</button>
+
+        <div id="loadingSpinner"></div>
+
+        <div id="result"></div>
+
+        <script>
+            document.getElementById('pickMapBtn').addEventListener('click', async function() {
+                var button = this;
+                var spinner = document.getElementById('loadingSpinner');
+
+                // Pokazanie spinnera i zablokowanie przycisku
+                spinner.style.display = 'block';
+                button.disabled = true;
+
+                // Funkcja wprowadzająca opóźnienie
+                function delay(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+
+                // Czekanie 3 sekundy przed wykonaniem fetch
+                await delay(3000); // Czekaj 3000 ms (3 sekundy)
+
+                // Wykonanie zapytania AJAX po opóźnieniu
+                try {
+                    const response = await fetch("{{ path('pickMap') }}");
+
+                    if (!response.ok) {
+                        throw new Error('Błąd HTTP: ' + response.status);
+                    }
+
+                    const data = await response.json();
+
+                    // Wyświetlenie wylosowanej mapy
+                    document.getElementById('result').innerText = data.map + '!';
+                } catch (error) {
+                    console.error('Błąd:', error);
+                    document.getElementById('result').innerText = 'Wystąpił błąd podczas ładowania mapy.';
+                } finally {
+                    // Ukrywanie spinnera i odblokowanie przycisku
+                    spinner.style.display = 'none';
+                    button.disabled = false;
+                }
+            });
+        </script>
+    </div>
 {% endblock %}

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Repository\MapRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 class HomepageController extends AbstractController
@@ -10,25 +12,20 @@ class HomepageController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function index(){
 
-        $randInt = random_int(1,3);
-
-        $map = $this->pickMap($randInt);
-
-        return $this->render('Homepage/index.html.twig', [
-            'number' => $randInt,
-            'map' => $map
-        ]);
+        return $this->render('Homepage/index.html.twig');
     }
 
-    private function pickMap(int $number): string
+    #[Route('/picking', name: 'pickMap')]
+    public function picking(MapRepository $mapRepository): JsonResponse
     {
-        switch ($number) {
-            case 1:
-                return 'Mirage';
-            case 2:
-                return 'Nuke';
-            case 3:
-                return 'Ancient';
-        }
+        $maps = $mapRepository->findAll();
+        $map = $this->pickMap($maps);
+
+        return new JsonResponse(['map' => $map]);
+    }
+
+    private function pickMap(array $maps): string
+    {
+        return $maps[array_rand($maps)]->getName();
     }
 }
