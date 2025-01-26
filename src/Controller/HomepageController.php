@@ -2,31 +2,26 @@
 
 namespace App\Controller;
 
+use App\Entity\Map;
 use App\Repository\MapRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 class HomepageController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function index(){
+    public function index(MapRepository $mapRepository){
 
-        return $this->render('Homepage/index.html.twig');
-    }
-
-    #[Route('/picking', name: 'pickMap', methods: ['GET'])]
-    public function picking(MapRepository $mapRepository): JsonResponse
-    {
         $maps = $mapRepository->findAll();
 
-        if (empty($maps)) {
-            return new JsonResponse(['error' => 'No maps found'], 400);
-        }
+        $mapNames = array_map(function (Map $map) {
+            return $map->getName();
+        }, $maps);
 
-        $map = $this->pickMap($maps);
 
-        return new JsonResponse(['map' => $map]);
+        return $this->render('Homepage/index.html.twig', [
+            'maps' => $mapNames,
+        ]);
     }
 
     private function pickMap(array $maps): string

@@ -7,48 +7,38 @@
 
         <button id="pickMapBtn">Pick map</button>
 
-        <div id="loadingSpinner"></div>
+        <div id="loadingSpinner" style="display: none;"></div>
 
         <div id="result"></div>
 
         <script>
-            document.getElementById('pickMapBtn').addEventListener('click', async function() {
+            // Przekazujemy tablicę map z kontrolera do JavaScript
+            const maps = {{ maps|json_encode|raw }};
+
+            document.getElementById('pickMapBtn').addEventListener('click', function() {
                 var button = this;
                 var spinner = document.getElementById('loadingSpinner');
+                var result = document.getElementById('result');
 
-                // Pokazanie spinnera i zablokowanie przycisku
+                // Pokaż spinner, wyłącz przycisk, usuń stary wynik
                 spinner.style.display = 'block';
                 button.disabled = true;
+                result.innerText = '';
 
-                // Funkcja wprowadzająca opóźnienie
-                function delay(ms) {
-                    return new Promise(resolve => setTimeout(resolve, ms));
-                }
-
-                // Czekanie 3 sekundy przed wykonaniem fetch
-                await delay(3000); // Czekaj 3000 ms (3 sekundy)
-
-                // Wykonanie zapytania AJAX po opóźnieniu
-                try {
-                    const response = await fetch("{{ path('pickMap') }}");
-
-                    if (!response.ok) {
-                        throw new Error('Błąd HTTP: ' + response.status);
-                    }
-
-                    const data = await response.json();
-
-                    // Wyświetlenie wylosowanej mapy
-                    document.getElementById('result').innerText = data.map + '!';
-                } catch (error) {
-                    console.error('Błąd:', error);
-                    document.getElementById('result').innerText = 'Wystąpił błąd podczas ładowania mapy.';
-                } finally {
-                    // Ukrywanie spinnera i odblokowanie przycisku
+                setTimeout(function() {
+                    // Ukryj spinner, włącz przycisk
                     spinner.style.display = 'none';
                     button.disabled = false;
-                }
+
+                    // Losowanie mapy z tablicy
+                    const randomMap = maps[Math.floor(Math.random() * maps.length)];
+
+                    // Wyświetlenie wyniku
+                    result.innerText = `${randomMap}!`;
+                }, 3300);
             });
         </script>
+
+
     </div>
 {% endblock %}
