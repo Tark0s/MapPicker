@@ -15,10 +15,15 @@ class HomepageController extends AbstractController
         return $this->render('Homepage/index.html.twig');
     }
 
-    #[Route('/picking', name: 'pickMap')]
+    #[Route('/picking', name: 'pickMap', methods: ['GET'])]
     public function picking(MapRepository $mapRepository): JsonResponse
     {
         $maps = $mapRepository->findAll();
+
+        if (empty($maps)) {
+            return new JsonResponse(['error' => 'No maps found'], 400);
+        }
+
         $map = $this->pickMap($maps);
 
         return new JsonResponse(['map' => $map]);
