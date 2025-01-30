@@ -1,6 +1,9 @@
 # 🎮 Aplikacja do Losowania Map w CS2
 
-Prosta aplikacja do losowania map do gry w **Counter-Strike 2** (CS2). Projekt został stworzony w celu ułatwienia wyboru mapy podczas rozgrywek, zapewniając losowy wybór mapy spośród dostępnych opcji.
+Prosta aplikacja do losowania map do gry w **Counter-Strike 2** (CS2). Projekt został stworzony w celu ułatwienia wyboru mapy podczas rozgrywek, zapewniając losowy wybór mapy spośród dostępnych opcji. 
+
+
+🌐 Dostępna online pod tym [Linkiem](https://sandbox-lt-247bdf7f7b20.herokuapp.com/)
 
 ## Technologie 🛠
 
